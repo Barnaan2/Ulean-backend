@@ -164,7 +164,7 @@ next();
 });
 
 courseSchema.post(/^find/,function(doc,next){
-console.log(`the query took ${Date.now() - this.start} miliseconds`)
+console.log(`the query took ${Date.now() - this.start} milliseconds`)
 next();
 })
 

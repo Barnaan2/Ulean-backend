@@ -1,7 +1,9 @@
 const express = require('express');
 const { checkId,checkBody } = require('./../middlewares/userMiddleware')
 const {getUser,getUsers,createUser,updateUser,deleteUser} = require('./../controllers/userControllers');
+const {signUp,login} = require('./../controllers/authController');
 const router = express.Router();
+const {protect,restrictTo} = require('./../middlewares/authMiddleware')
 
 
 // router.param('id',checkId)
@@ -25,8 +27,16 @@ const router = express.Router();
 //     }
 // })
 
+router
+.post('/login/',login);
+router
+.post('/sign-up/',signUp);
+
+
+
+ 
 router.route('/')
-.get(getUsers)
+.get(protect,restrictTo('admin,student'),getUsers)
 .post(createUser);
 
 router.route('/:id')
