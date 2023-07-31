@@ -42,6 +42,7 @@ exports.createUser = async (req,res)=>{
 exports.updateUser = async (req,res)=>{
     const { id } = req.params;
     const data = req.body;
+}
     try{
         const user = await User.findByIdAndUpdate(id,data,{
             new:true,
@@ -61,7 +62,7 @@ exports.updateUser = async (req,res)=>{
         })
 
     }
-}
+
 
 
 
@@ -106,3 +107,14 @@ exports.deleteUser = async (req,res)=>{
         })
     }
 }
+
+
+// exports.updateAccount =(res,req)=>{
+// try{
+
+
+// }
+// catch(err){
+//     console.log(err);
+// }
+// }

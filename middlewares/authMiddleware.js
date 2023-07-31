@@ -22,7 +22,6 @@ exports.protect = async(req,res,next)=>{
         const user = await User.findById(id); 
         // since i found the user type here
         // i can use it to identify user.   
-        console.log(user.userType);
         if(!user){
             return res.status(401).json({
                 status:"unauthorized user",
@@ -38,7 +37,8 @@ req.user = user;
 // this is authorization of user to specific task
 exports.restrictTo = (...roles) =>{
     return(req,res,next)=>{
-        console.log(req.user.role);
+        console.log(req.user.role,roles);
+        
         if(!roles.includes(req.user.role)){
             return res.status(403).json({
                 status: "403 you do not have permission to access this route",

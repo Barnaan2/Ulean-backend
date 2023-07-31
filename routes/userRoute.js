@@ -1,7 +1,7 @@
 const express = require('express');
 const { checkId,checkBody } = require('./../middlewares/userMiddleware')
 const {getUser,getUsers,createUser,updateUser,deleteUser} = require('./../controllers/userControllers');
-const {signUp,login} = require('./../controllers/authController');
+const {signUp,login, forgotPassword,resetPassword,updatePassword} = require('./../controllers/authController');
 const router = express.Router();
 const {protect,restrictTo} = require('./../middlewares/authMiddleware')
 
@@ -24,19 +24,26 @@ const {protect,restrictTo} = require('./../middlewares/authMiddleware')
 //     }
 //     else{
 //       return  res.status(400).json({status : "The main page "})
-//     }
-// })
+//     }clear
 
+// })
+router
+.patch('/change-password/',protect ,updatePassword)
 router
 .post('/login/',login);
 router
 .post('/sign-up/',signUp);
+router
+.post('/forgot-password/',forgotPassword)
+router
+.patch('/reset-password/:token',resetPassword)
+// .patch('/reset-password/:token',resetPassword)
 
 
 
  
 router.route('/')
-.get(protect,restrictTo('admin,student'),getUsers)
+.get(protect,restrictTo('admin','student'),getUsers)
 .post(createUser);
 
 router.route('/:id')

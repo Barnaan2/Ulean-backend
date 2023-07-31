@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 // the rule is fat model and thin controller.
 const userSchema = new mongoose.Schema({
   name:{
@@ -72,14 +73,15 @@ updatedAt:{
     select:false,
 },
 
-passwordChangedAt: Date
+passwordChangedAt: Date,
+passwordResetToken:String,
+passwordResetExpires:Date
 
 });
 
 
 // this middleware function should  be placed above the method that calls mongoose.model()
 userSchema.pre('save', async function(next){
-  console.log("Password Encrypt is working")
     // this runs if only password is modified.
   if(!this.isModified('password')){
     return next(); 
@@ -98,6 +100,15 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
   if(this.passwordChangedAt){
     console.log(JWTTimestamp);
   }
+}
+
+userSchema.methods.createPasswordResetToken = function(){
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+this.passwordResetToken =  crypto.createHash('sha256').update(resetToken).digest('hex');
+this.PasswordResetExpires = Date.now() + 10 * 60 * 1000;
+return resetToken;
+
 }
 const User = mongoose.model('User',userSchema);
 
