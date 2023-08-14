@@ -1,5 +1,72 @@
 const User = require('./../models/userModel')
 
+const filter = (obj, ...allowedFields)=>{
+    let FilteredObj = {};
+const allowedFields = allowedFields;
+ const selectedFields = Object.keys(obj);
+selectedFields.forEach(item=>{
+if(allowedFields.includes(item)){
+    FilteredObj[item] = obj[item];
+}
+})
+// with this method we will able to tackle the attack 
+// of upgrading users role.
+return FilteredObj;
+}
+
+exports.updateMyData = async(req,res) =>{
+    const { password , passwordConfirm } = req.body;
+
+    if(password || passwordConfirm ){
+
+        res.status(400).json({
+            status : "This endpoint is not for updating password !"
+
+        })
+    }
+   try{
+const filteredBody = filter(req.body,'name','email');
+       const updatedUser = await User.findByIdAndUpdate(req.user.id,filteredBody,{new:true,runValidators:true});
+      res.status(200).json({
+          status:"the data is updated",
+          data:{
+              updatedUser
+          }
+      })
+      }
+   catch(err){
+    console.log(err);
+   }
+    // here i believe i can use findone and update method.
+}
+
+exports.deleteMyData = async (req,res) =>{
+    try{
+// create object to update user's activeness
+const deactivate = {'active':false};
+User.findByIdAndUpdate(req.id,deactivate);
+res.status(204).json({
+    status:"the content you are looking for is deleted !"
+})
+
+    }
+    catch(err){
+        console.log(err)
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 exports.getUsers  = async (req,res)=>{
     try{
         const users =  await User.find();

@@ -1,6 +1,6 @@
 const express = require('express');
 const { checkId,checkBody } = require('./../middlewares/userMiddleware')
-const {getUser,getUsers,createUser,updateUser,deleteUser} = require('./../controllers/userControllers');
+const {getUser,getUsers,createUser,updateUser,deleteUser,updateMyData,deleteMyData} = require('./../controllers/userControllers');
 const {signUp,login, forgotPassword,resetPassword,updatePassword} = require('./../controllers/authController');
 const router = express.Router();
 const {protect,restrictTo} = require('./../middlewares/authMiddleware')
@@ -50,5 +50,9 @@ router.route('/:id')
 .get(getUser)
 .patch(updateUser)
 .delete(deleteUser);
+
+router.patch('/updateMyData',protect,updateMyData);
+router.delete('/deleteMyData',protect,deleteMyData);
+
 
 module.exports = router;

@@ -75,8 +75,20 @@ updatedAt:{
 
 passwordChangedAt: Date,
 passwordResetToken:String,
-passwordResetExpires:Date
+passwordResetExpires:Date,
+active:{
+  type:Boolean,
+  default:true,
+  select:false
+}
 
+});
+
+
+// THIS IS THE SOFTDELETE IN DJANGO AND LARAVEL
+userSchema.pre(/^find/,function(next){
+this.find({active: {$ne : false}});
+next()
 });
 
 
